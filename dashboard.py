@@ -3,54 +3,54 @@ import requests
 import time
 import pandas as pd
 from datetime import datetime
-import json
 
 # ==============================================================================
 # 1. Dashboard Configuration
 # ==============================================================================
-st.set_page_config(layout="wide", page_title="Tobacco Curing System")
+st.set_page_config(layout="wide", page_title="Tobacco Curing Remote")
 
-# Sidebar for Connection Settings
 st.sidebar.header("🔌 Connection Settings")
-# You can change the default value to your actual RPi IP
-RPI_IP = st.sidebar.text_input("Raspberry Pi IP Address", value="192.168.1.77") 
-PORT = "5050"
-API_URL = f"http://{RPI_IP}:{PORT}"
+# Defaulting to your ngrok URL
+raw_input = st.sidebar.text_input("RPi Address", value="wormlike-dave-seasonable.ngrok-free.dev")
 
-REFRESH_RATE_SECONDS = 3
+# Smart URL Logic: Handles ngrok (https, no port) vs Local IP (http + port 5050)
+if "ngrok-free.dev" in raw_input:
+    # Remove http/https if user pasted it, then force https for ngrok
+    clean = raw_input.replace("http://", "").replace("https://", "")
+    API_URL = f"https://{clean}"
+else:
+    # Local IP logic
+    clean = raw_input.replace("http://", "").replace("https://", "")
+    API_URL = f"http://{clean}:5050"
+
+REFRESH_RATE_SECONDS = 5
 
 # ==============================================================================
-# 2. API Interaction Functions
+# 2. API Functions
 # ==============================================================================
 
-@st.cache_data(ttl=REFRESH_RATE_SECONDS)
 def get_status():
-    """Fetches the current status from the Flask API."""
     try:
-        response = requests.get(f"{API_URL}/api/status", timeout=2)
+        response = requests.get(f"{API_URL}/api/status", timeout=3)
         response.raise_for_status()
         data = response.json()
-        
-        # Calculate uptime string
         uptime_seconds = data.get('uptime', 0)
         td = datetime.fromtimestamp(uptime_seconds) - datetime.fromtimestamp(0)
         data['uptime_str'] = str(td).split('.')[0]
-        
         return data
-    except requests.exceptions.RequestException as e:
-        st.error(f"Cannot connect to RPi API at {API_URL}. Check IP and Port.")
+    except Exception as e:
+        st.error(f"Connection Failed: {API_URL}")
+        st.info("💡 Tip: If using ngrok, ensure 'ngrok http 5050' is running on the Pi.")
         return None
 
 def post_control(endpoint, payload=None):
-    """Sends control commands to the Flask API."""
     try:
-        response = requests.post(f"{API_URL}/api/{endpoint}", json=payload, timeout=2)
-        response.raise_for_status()
-        st.toast(f"Command '{endpoint}' successful!", icon='✅')
-        time.sleep(0.5) # Short buffer for hardware to react
-        st.rerun() 
-    except requests.exceptions.RequestException as e:
-        st.toast(f"Control command failed: {e}", icon='❌')
+        requests.post(f"{API_URL}/api/{endpoint}", json=payload, timeout=3)
+        st.toast("Command Sent!", icon='✅')
+        time.sleep(1)
+        st.rerun()
+    except:
+        st.toast("Command Failed", icon='❌')
 
 def get_trend_data():
     """Fetches historical data for charting."""
