@@ -11,7 +11,7 @@ import json
 
 # IMPORTANT: Replace '127.0.0.1' with the actual IP address of your Raspberry Pi 
 # on your local network (e.g., '192.168.1.100').
-RPI_IP = '192.168.1.77' 
+RPI_IP = '127.0.0.1' 
 API_URL = f"http://{RPI_IP}:5050"
 
 # Set the dashboard refresh rate in seconds
