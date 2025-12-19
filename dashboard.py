@@ -13,7 +13,7 @@ if "API_URL" in st.secrets:
 else:
     # Fallback for local testing only
     API_URL = "http://127.0.0.1:5050"
-API_URL = f"http://{RPI_IP}:5050"
+    API_URL = f"http://{RPI_IP}:5050"
 
 # Set the dashboard refresh rate in seconds
 REFRESH_RATE_SECONDS = 3
