@@ -13,7 +13,7 @@ st.set_page_config(layout="wide", page_title="Tobacco Curing System")
 # Sidebar for Connection Settings
 st.sidebar.header("🔌 Connection Settings")
 # You can change the default value to your actual RPi IP
-RPI_IP = st.sidebar.text_input("Raspberry Pi IP Address", value="192.168.1.100") 
+RPI_IP = st.sidebar.text_input("Raspberry Pi IP Address", value="192.168.1.77") 
 PORT = "5050"
 API_URL = f"http://{RPI_IP}:{PORT}"
 
