@@ -8,10 +8,11 @@ import json
 # ==============================================================================
 # 1. Configuration - YOU MUST CHANGE THIS
 # ==============================================================================
-
-# IMPORTANT: Replace '127.0.0.1' with the actual IP address of your Raspberry Pi 
-# on your local network (e.g., '192.168.1.100').
-RPI_IP = '192.168.1.77' 
+if "API_URL" in st.secrets:
+    API_URL = st.secrets["API_URL"]
+else:
+    # Fallback for local testing only
+    API_URL = "http://127.0.0.1:5050"
 API_URL = f"http://{RPI_IP}:5050"
 
 # Set the dashboard refresh rate in seconds
