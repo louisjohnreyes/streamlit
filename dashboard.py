@@ -5,13 +5,7 @@ import pandas as pd
 from datetime import datetime
 import json
 
-# ==============================================================================
-# 1. Configuration - YOU MUST CHANGE THIS
-# ==============================================================================
-
-# IMPORTANT: Replace '127.0.0.1' with the actual IP address of your Raspberry Pi 
-# on your local network (e.g., '192.168.1.100').
-RPI_IP = '192.168.1.77' 
+API_URL ="https://wormlike-dave-seasonable.ngrok-free.dev"
 API_URL = f"http://{RPI_IP}:5050"
 
 # Set the dashboard refresh rate in seconds
